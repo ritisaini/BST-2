@@ -1,0 +1,63 @@
+// Size of Largest BST in BT
+public class size_largest_BST {
+    static class Node {
+        int data;
+        Node left;
+        Node right;
+
+        Node(int data){
+            this.data = data;
+            this.left = null;
+            this.right = null;
+        }
+    }
+    static class Info {
+        boolean isBST;
+        int size;
+        int min;
+        int max;
+
+        public Info(boolean isBST, int size, int min, int max){
+            this.BST = isBST;
+            this.size = size;
+            this.min = min;
+            this.max = max;
+        }
+    }
+    public static int maxBST = 0;
+    
+    public static Info largestBST(Node root){
+        if(root == null){
+            return new Info(true, 0, Integer.MAX_VALUE, Integer.MIN_VALUE);
+        }
+        Info leftInfo = largestBST(root.left);
+        Info rightInfo = largestBST(root.right);
+        int size = leftInfo.size + rightInfo.size + 1;
+        int min = Math.min(root.data, Math.min(leftInfo.min, rightInfo.min));
+
+        if(root.data <= leftInfo.max || root.data >= rightInfo.min){
+            return new Info(false, size, min, max);
+        }
+
+        if(leftInfo.isBST && rightInfo.isBST){
+            maxBST = Math.max(maxBST, size);
+            return new Info(true, size, min, max);
+        }
+        return new Info(false, size, min, max);
+    }
+    public static void main(String args[]){
+        /*
+                  50
+                 / \
+                30   60
+               / \   / \
+              5   20 45 70   
+                        / \
+                       65  80
+            expected BST : size = 5        
+         */
+        Info info = largestBST(root);
+        System.out.println("Largest BST size = " + maxBST);
+}
+}
+// output = largest BST size = 5
